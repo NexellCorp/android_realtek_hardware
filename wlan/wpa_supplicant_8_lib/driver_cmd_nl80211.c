@@ -255,7 +255,19 @@ int wpa_driver_nl80211_driver_cmd(void *priv, char *cmd, char *buf,
 			os_memcpy(buf, "PNOFORCE 1", 11);
 		} else if (os_strcasecmp(cmd, "BGSCAN-STOP") == 0) {
 			os_memcpy(buf, "PNOFORCE 0", 11);
-
+        /** psw0523 add **/
+        } else if (os_strncasecmp(cmd, "BTCOEXMODE", 10) == 0) {
+            os_memcpy(buf, "OK", 3);
+            return strlen(buf);
+        } else if (os_strncasecmp(cmd, "BTCOEXSCAN", 10) == 0) {
+            os_memcpy(buf, "OK", 3);
+            return strlen(buf);
+        } else if (os_strncasecmp(cmd, "RXFILTER", 8) == 0) {
+            os_memcpy(buf, "OK", 3);
+            return strlen(buf);
+        } else if (os_strncasecmp(cmd, "SETBAND", 7) == 0) {
+            os_memcpy(buf, "OK", 3);
+            return strlen(buf);
 		/*** for CONFIG_WFD ***/
 		} else if (os_strcasecmp(cmd, "WFD-SET-TCPPORT") == 0) {
 			char tmp[ 10 ] = { 0x00 };
@@ -288,7 +300,7 @@ int wpa_driver_nl80211_driver_cmd(void *priv, char *cmd, char *buf,
 		ifr.ifr_data = &priv_cmd;
 
 		if ((ret = ioctl(drv->global->ioctl_sock, SIOCDEVPRIVATE + 1, &ifr)) < 0) {
-			wpa_printf(MSG_ERROR, "%s: failed to issue private commands\n", __func__);
+			wpa_printf(MSG_ERROR, "%s: failed to issue private commands: cmd(%s)\n", __func__, buf);
 			wpa_driver_send_hang_msg(drv);
 		} else {
 			drv_errors = 0;
@@ -391,8 +403,8 @@ int wpa_driver_set_ap_wps_p2p_ie(void *priv, const struct wpabuf *beacon,
 				os_memcpy(pbuf, wpabuf_head(ap_wps_p2p_ie), wpabuf_len(ap_wps_p2p_ie));
 				ret = wpa_driver_nl80211_driver_cmd(priv, buf, buf,
 					strlen(_cmd) + 3 + wpabuf_len(ap_wps_p2p_ie));
-				
-				os_free(buf);				
+
+				os_free(buf);
 			} else {
 				wpa_printf(MSG_ERROR, "%s: os_zalloc fail", __func__);
 				ret = -1;
