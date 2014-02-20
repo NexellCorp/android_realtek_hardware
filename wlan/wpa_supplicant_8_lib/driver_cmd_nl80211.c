@@ -268,6 +268,9 @@ int wpa_driver_nl80211_driver_cmd(void *priv, char *cmd, char *buf,
         } else if (os_strncasecmp(cmd, "SETBAND", 7) == 0) {
             os_memcpy(buf, "OK", 3);
             return strlen(buf);
+        } else if (os_strncasecmp(cmd, "SETSUSPENDMODE", 14) == 0) {
+            os_memcpy(buf, "OK", 3);
+            return strlen(buf);
 		/*** for CONFIG_WFD ***/
 		} else if (os_strcasecmp(cmd, "WFD-SET-TCPPORT") == 0) {
 			char tmp[ 10 ] = { 0x00 };
