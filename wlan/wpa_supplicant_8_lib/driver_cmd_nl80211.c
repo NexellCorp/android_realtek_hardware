@@ -222,9 +222,14 @@ int wpa_driver_nl80211_driver_cmd(void *priv, char *cmd, char *buf,
 		u8 macaddr[ETH_ALEN] = {};
 
 		ret = linux_get_ifhwaddr(drv->global->ioctl_sock, bss->ifname, macaddr);
-		if (!ret)
-			ret = os_snprintf(buf, buf_len,
-					  "Macaddr = " MACSTR "\n", MAC2STR(macaddr));
+        if (!ret) {
+            ret = os_snprintf(buf, buf_len,
+                    "Macaddr = " MACSTR "\n", MAC2STR(macaddr));
+            wpa_printf(MSG_INFO, "=======> mac address: " MACSTR "\n", MAC2STR(macaddr));
+        } else {
+            wpa_printf(MSG_INFO, "!!!!!! NO Mac Address!!!");
+            ret = os_snprintf(buf, buf_len, "Macaddr = 11:22:33:44:55:66\n");
+        }
 	} else if (os_strcasecmp(cmd, "RELOAD") == 0) {
 		wpa_msg(drv->ctx, MSG_INFO, WPA_EVENT_DRIVER_STATE "HANGED");
 	} else if (os_strncasecmp(cmd, "POWERMODE ", 10) == 0) {
