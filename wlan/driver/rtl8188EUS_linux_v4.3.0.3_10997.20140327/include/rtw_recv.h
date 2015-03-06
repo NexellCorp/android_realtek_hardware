@@ -48,7 +48,8 @@
 
     // psw0523 test for HENA
 	//#define NR_PREALLOC_RECV_SKB (8)
-	#define NR_PREALLOC_RECV_SKB (32)
+	//#define NR_PREALLOC_RECV_SKB (32)
+	#define NR_PREALLOC_RECV_SKB (64)
 #endif
 
 #define NR_RECVFRAME 256
