@@ -10,9 +10,9 @@
  *
  */
 
-//#include "driver_nl80211.h"
+#include "driver_nl80211.h"
 #include <sys/cdefs.h>
-#include "hardware_legacy/driver_nl80211.h"
+/* #include "hardware_legacy/driver_nl80211.h" */
 #include "wpa_supplicant_i.h"
 #include "config.h"
 #ifdef ANDROID
@@ -118,7 +118,16 @@ int wpa_driver_nl80211_driver_cmd(void *priv, char *cmd, char *buf,
 
 		if ((ret = ioctl(drv->global->ioctl_sock, SIOCDEVPRIVATE + 1, &ifr)) < 0) {
 			wpa_printf(MSG_ERROR, "%s: failed to issue private command: %s", __func__, cmd);
-			wpa_driver_send_hang_msg(drv);
+			/* see
+			 * opt/net/wifi/service/java/com/android/server/wifi/WifiNative.java
+			 * */
+			if ((os_strncasecmp(cmd, "BTCOEXMODE", 10) == 0) ||
+				(os_strncasecmp(cmd, "RXFILTER", 8) == 0) ||
+				(os_strncasecmp(cmd, "SETSUSPENDMODE", 14) == 0)
+			   )
+				ret = 0;
+			else
+				wpa_driver_send_hang_msg(drv);
 		} else {
 			drv_errors = 0;
 			ret = 0;
