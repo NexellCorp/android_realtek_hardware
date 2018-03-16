@@ -6,3 +6,5 @@
 modules.order
 wlan.ko
 .tmp_versions/*
+*.mod.c
+*.symvers
